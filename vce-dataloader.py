@@ -1,3 +1,4 @@
+# %% [code]
 # %% [code] {"jupyter":{"outputs_hidden":false}}
 
 # %% [code] {"jupyter":{"outputs_hidden":false},"execution":{"iopub.status.busy":"2024-10-08T06:19:36.274243Z","iopub.execute_input":"2024-10-08T06:19:36.274704Z","iopub.status.idle":"2024-10-08T06:19:36.281537Z","shell.execute_reply.started":"2024-10-08T06:19:36.274661Z","shell.execute_reply":"2024-10-08T06:19:36.280111Z"}}
@@ -24,7 +25,7 @@ class BinaryDataset(Dataset):
         return image, binary_label
 
 # %% [code] {"jupyter":{"outputs_hidden":false},"execution":{"iopub.status.busy":"2024-10-08T06:31:40.383731Z","iopub.execute_input":"2024-10-08T06:31:40.384214Z","iopub.status.idle":"2024-10-08T06:31:40.395654Z","shell.execute_reply.started":"2024-10-08T06:31:40.384168Z","shell.execute_reply":"2024-10-08T06:31:40.394214Z"}}
-def getBinaryDataLoader(image_size = (224,224), target_class_name = None, path_to_dataset = None, batch_size = 32):
+def getBinaryDataLoader(image_size = (224,224), target_class_name = None, path_to_dataset = None, batch_size = 32, sampling = True):
     
     transform = transforms.Compose([
         transforms.Resize(image_size),
@@ -45,12 +46,14 @@ def getBinaryDataLoader(image_size = (224,224), target_class_name = None, path_t
     sample_weights = [class_weights[label] for label in targets]
     sampler = WeightedRandomSampler(weights=sample_weights, num_samples=len(sample_weights), replacement=True)
     
-    
-    binaryDataLoader = DataLoader(binary_dataset, batch_size=batch_size, shuffle = False, sampler = sampler)
+    if sampling:
+        binaryDataLoader = DataLoader(binary_dataset, batch_size=batch_size, shuffle = False, sampler = sampler)
+    else:
+        binaryDataLoader = DataLoader(binary_dataset, batch_size=batch_size, shuffle = True)
     return binaryDataLoader
 
 # %% [code] {"jupyter":{"outputs_hidden":false},"execution":{"iopub.status.busy":"2024-10-08T06:31:45.502099Z","iopub.execute_input":"2024-10-08T06:31:45.502701Z","iopub.status.idle":"2024-10-08T06:31:45.513883Z","shell.execute_reply.started":"2024-10-08T06:31:45.502643Z","shell.execute_reply":"2024-10-08T06:31:45.512413Z"}}
-def getAllDataLoader(image_size = (224,224), path_to_dataset = None, batch_size = 32):
+def getAllDataLoader(image_size = (224,224), path_to_dataset = None, batch_size = 32, sampling = True):
     transform = transforms.Compose([
         transforms.Resize(image_size),  # Adjust size based on your model
         transforms.ToTensor(),
@@ -61,8 +64,11 @@ def getAllDataLoader(image_size = (224,224), path_to_dataset = None, batch_size 
     class_weights = 1. / class_sample_counts.float()
     sample_weights = [class_weights[label] for label in targets]
     sampler = WeightedRandomSampler(weights=sample_weights, num_samples=len(sample_weights), replacement=True)
-
-    all_classes_dataloader = DataLoader(all_classes_dataset, batch_size=batch_size, shuffle=False, sampler = sampler)
+    
+    if sampling:
+        all_classes_dataloader = DataLoader(all_classes_dataset, batch_size=batch_size, shuffle=False, sampler = sampler)
+    else:
+        all_classes_dataloader = DataLoader(all_classes_dataset, batch_size=batch_size, shuffle=True)
     return all_classes_dataloader
 
 # %% [code] {"jupyter":{"outputs_hidden":false},"execution":{"iopub.status.busy":"2024-10-08T06:19:38.350439Z","iopub.execute_input":"2024-10-08T06:19:38.350980Z","iopub.status.idle":"2024-10-08T06:19:38.360735Z","shell.execute_reply.started":"2024-10-08T06:19:38.350906Z","shell.execute_reply":"2024-10-08T06:19:38.359301Z"}}
