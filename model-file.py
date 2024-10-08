@@ -10,5 +10,5 @@ def getModel(model_name):
     return model
 
 def getList():
-    return torchvision.models.list_models()
+    return models.list_models()
 
