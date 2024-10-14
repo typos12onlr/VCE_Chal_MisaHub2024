@@ -4,8 +4,14 @@ import torch.nn as nn
 
 # %% [code] {"execution":{"iopub.status.busy":"2024-10-14T16:26:06.481195Z","iopub.execute_input":"2024-10-14T16:26:06.481868Z","iopub.status.idle":"2024-10-14T16:26:06.494273Z","shell.execute_reply.started":"2024-10-14T16:26:06.481810Z","shell.execute_reply":"2024-10-14T16:26:06.492813Z"}}
 class Generator(nn.Module):
-    def __init__(self, ngpu):
+    def __init__(self, ngpu, ngf, nc, nz):
         super(Generator, self).__init__()
+        '''
+        ngpu: Number of GPUs available
+        ngf : Size of feature maps in Generator
+        nc : Number of channels
+        nz : Latent vector size
+        '''
         self.ngpu = ngpu
         self.main = nn.Sequential(
             # Input is a random noise vector of size nz
@@ -44,8 +50,13 @@ class Generator(nn.Module):
 
 # %% [code] {"execution":{"iopub.status.busy":"2024-10-14T16:26:06.496961Z","iopub.execute_input":"2024-10-14T16:26:06.497582Z","iopub.status.idle":"2024-10-14T16:26:06.513646Z","shell.execute_reply.started":"2024-10-14T16:26:06.497499Z","shell.execute_reply":"2024-10-14T16:26:06.511743Z"}}
 class Discriminator(nn.Module):
-    def __init__(self, ngpu):
+    def __init__(self, ngpu, ndf, nc):
         super(Discriminator, self).__init__()
+        '''
+        ngpu: Number of GPUs available
+        ndf : Size of feature maps in Discriminator
+        nc : Number of channels
+        '''
         self.ngpu = ngpu
         self.main = nn.Sequential(
             # input is (nc) x 256 x 256
@@ -73,5 +84,12 @@ class Discriminator(nn.Module):
 
     def forward(self, input):
         return self.main(input)
+    
+
+if __name__ == "__main__":
+    netG = Generator(1,64,3,100)
+    netD = Discriminator(1,64,3)
+    print(netG)
+    print(netD)
 
 # %% [code]
