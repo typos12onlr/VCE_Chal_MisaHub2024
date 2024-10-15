@@ -25,14 +25,14 @@ class BinaryDataset(Dataset):
         return image, binary_label
 
 # %% [code] {"jupyter":{"outputs_hidden":false},"execution":{"iopub.status.busy":"2024-10-08T06:31:40.383731Z","iopub.execute_input":"2024-10-08T06:31:40.384214Z","iopub.status.idle":"2024-10-08T06:31:40.395654Z","shell.execute_reply.started":"2024-10-08T06:31:40.384168Z","shell.execute_reply":"2024-10-08T06:31:40.394214Z"}}
-def getBinaryDataLoader(image_size = (224,224), target_class_name = None, path_to_dataset = None, batch_size = 32, sampling = True):
+def getBinaryDataLoader(image_size = (224,224), target_class_name = None, path_to_dataset = None, batch_size = 32, sampling = True, trans=None):
     
-    transform = transforms.Compose([
-        transforms.Resize(image_size),
-        transforms.ToTensor(),
-    ])
+    # transform = transforms.Compose([
+    #     transforms.Resize(image_size),
+    #     transforms.ToTensor(),
+    # ])
     
-    dataset = datasets.ImageFolder(root = path_to_dataset, transform = transform)
+    dataset = datasets.ImageFolder(root = path_to_dataset, transform = trans)
     
     target_class = target_class_name
     
@@ -53,12 +53,12 @@ def getBinaryDataLoader(image_size = (224,224), target_class_name = None, path_t
     return binaryDataLoader
 
 # %% [code] {"jupyter":{"outputs_hidden":false},"execution":{"iopub.status.busy":"2024-10-08T06:31:45.502099Z","iopub.execute_input":"2024-10-08T06:31:45.502701Z","iopub.status.idle":"2024-10-08T06:31:45.513883Z","shell.execute_reply.started":"2024-10-08T06:31:45.502643Z","shell.execute_reply":"2024-10-08T06:31:45.512413Z"}}
-def getAllDataLoader(image_size = (224,224), path_to_dataset = None, batch_size = 32, sampling = True):
-    transform = transforms.Compose([
-        transforms.Resize(image_size),  # Adjust size based on your model
-        transforms.ToTensor(),
-    ])
-    all_classes_dataset = datasets.ImageFolder(root=path_to_dataset, transform=transform)
+def getAllDataLoader(image_size = (224,224), path_to_dataset = None, batch_size = 32, sampling = True, trans=None):
+    # transform = transforms.Compose([
+    #     transforms.Resize(image_size),  # Adjust size based on your model
+    #     transforms.ToTensor(),
+    # ])
+    all_classes_dataset = datasets.ImageFolder(root=path_to_dataset, transform=trans)
     targets = np.array([label for _, label in all_classes_dataset])
     class_sample_counts = torch.tensor(np.array([(targets == i).sum() for i in range(len(all_classes_dataset.classes))]))
     class_weights = 1. / class_sample_counts.float()
