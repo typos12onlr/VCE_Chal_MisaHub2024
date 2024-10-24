@@ -35,7 +35,7 @@ class TestDataset(torch.utils.data.Dataset):
 
 
 # %% [code] {"execution":{"iopub.status.busy":"2024-10-24T16:10:14.041025Z","iopub.execute_input":"2024-10-24T16:10:14.041849Z","iopub.status.idle":"2024-10-24T16:10:14.053739Z","shell.execute_reply.started":"2024-10-24T16:10:14.041806Z","shell.execute_reply":"2024-10-24T16:10:14.052724Z"}}
-def run_inference(model, dataloader, device, existing_label_class_mapping= existing_label_class_map, actual_class_order= actual_order, output_dir=out_dir):
+def run_inference(model, dataloader, device, existing_label_class_mapping, actual_class_order, output_dir):
     model.eval()  # Set the model to evaluation mode
     model= model.to(device)
     predictions = {}
